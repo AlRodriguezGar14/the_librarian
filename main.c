@@ -135,12 +135,70 @@ insert_book (TreeNode *root, const char *title, const char *author,
     return create_tree_node (title, author, year);
 
   int comparison = strcmp (title, root->book->title);
-  if (comparison == 0)
-    return root;
   if (comparison < 0)
     root->left = insert_book (root->left, title, author, year);
   if (comparison > 0)
     root->right = insert_book (root->right, title, author, year);
+
+  return root;
+}
+
+TreeNode *
+find_book (TreeNode *root, const char *title)
+{
+  if (root == NULL)
+    return NULL;
+
+  int comparison = strcmp (title, root->book->title);
+  if (comparison < 0)
+    return find_book (root->left, title);
+  if (comparison > 0)
+    return find_book (root->right, title);
+
+  return root;
+}
+
+TreeNode *
+find_minimum_node (TreeNode *root)
+{
+  TreeNode *current = root;
+  while (current && current->left)
+    current = current->left;
+  return current;
+}
+
+TreeNode *
+remove_book (TreeNode *root, const char *title)
+{
+  if (title == NULL || root == NULL)
+    return NULL;
+
+  int comparison = strcmp (title, root->book->title);
+  if (comparison < 0)
+    root->left = remove_book (root->left, title);
+  else if (comparison > 0)
+    root->right = remove_book (root->right, title);
+  else
+  {
+    if (root->left == NULL)
+    {
+      TreeNode *tmp = root->right;
+      free_book (root->book);
+      free (root);
+      return tmp;
+    }
+    else if (root->right == NULL)
+    {
+      TreeNode *tmp = root->left;
+      free_book (root->book);
+      free (root);
+      return tmp;
+    }
+    TreeNode *tmp = find_minimum_node (root->right);
+    free_book (root->book);
+    root->book = tmp->book;
+    root->right = remove_book (root->right, tmp->book->title);
+  }
 
   return root;
 }
@@ -161,6 +219,13 @@ main (void)
     = insert_book (library.entry_point, "bac", "someone3", 2024);
 
   print_library (library.entry_point);
+
+  TreeNode *book = find_book (library.entry_point, "aabc");
+  if (book == NULL)
+    printf ("null\n");
+  else
+    printf ("book: %s\n", book->book->title);
+  remove_book (library.entry_point, "bac");
   free_library (library.entry_point);
 
   return 1;
