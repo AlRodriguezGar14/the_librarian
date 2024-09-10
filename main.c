@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <assert.h>
 
 /* Book */
 
@@ -44,6 +45,11 @@ Book *
 create_book (const char *title, const char *author,
              const uint16_t publication_year)
 {
+  if (title == NULL || author == NULL)
+  {
+    fprintf (stderr, "Title or author cannot be NULL\n");
+    return NULL;
+  }
   Book *new_book = malloc (sizeof (Book));
   if (new_book == NULL)
   {
@@ -131,6 +137,11 @@ TreeNode *
 insert_book (TreeNode *root, const char *title, const char *author,
              const uint16_t year)
 {
+  if (title == NULL || author == NULL)
+  {
+    fprintf (stderr, "Title or author cannot be NULL\n");
+    return NULL;
+  }
   if (root == NULL)
     return create_tree_node (title, author, year);
 
@@ -203,30 +214,75 @@ remove_book (TreeNode *root, const char *title)
   return root;
 }
 
-int
-main (void)
+/* TESTS */
+
+void
+test_create_book ()
 {
-  // Library *library = calloc (sizeof (Library), 1);
-  Library library = {0};
+  puts ("Testing create_book...");
+  Book *book = create_book ("Test Title", "Test Author", 2022);
+  assert (strcmp (book->title, "Test Title") == 0);
+  assert (strcmp (book->author, "Test Author") == 0);
+  assert (book->publication_year == 2022);
+  puts ("create_book passed\n");
+  free_book (book);
+}
 
-  library.entry_point
-    = insert_book (library.entry_point, "bca", "someone", 2024);
+void
+test_insert_and_find_book ()
+{
+  puts ("Testing insert_book and find_book...");
+  TreeNode *root = NULL;
+  root = insert_book (root, "Test Title", "Test Author", 2022);
+  puts ("Library after inserting a book:");
+  print_library (root);
+  TreeNode *found = find_book (root, "Test Title");
+  assert (found != NULL);
+  assert (strcmp (found->book->title, "Test Title") == 0);
+  assert (strcmp (found->book->author, "Test Author") == 0);
+  assert (found->book->publication_year == 2022);
+  puts ("insert_book and find_book passed\n");
+  free_library (root);
+}
 
-  library.entry_point
-    = insert_book (library.entry_point, "abc", "someone2", 2024);
+void
+test_remove_book ()
+{
+  puts ("Testing remove_book...");
+  TreeNode *root = NULL;
+  root = insert_book (root, "Test Title", "Test Author", 2022);
+  puts ("Library before removing a book:\n");
+  print_library (root);
+  root = remove_book (root, "Test Title");
+  puts ("Library after removing a book:");
+  print_library (root);
+  TreeNode *found = find_book (root, "Test Title");
+  assert (found == NULL);
+  puts ("remove_book passed\n");
+  free_library (root);
+}
 
-  library.entry_point
-    = insert_book (library.entry_point, "bac", "someone3", 2024);
+void
+test_edge_cases ()
+{
+  puts ("Testing edge cases...");
+  Book *book = create_book (NULL, NULL, 0);
+  assert (book == NULL);
+  TreeNode *root = insert_book (NULL, NULL, NULL, 0);
+  assert (root == NULL);
+  TreeNode *found = find_book (root, NULL);
+  assert (found == NULL);
+  root = remove_book (root, NULL);
+  assert (root == NULL);
+  puts ("Edge cases test passed.\n");
+}
 
-  print_library (library.entry_point);
-
-  TreeNode *book = find_book (library.entry_point, "aabc");
-  if (book == NULL)
-    printf ("null\n");
-  else
-    printf ("book: %s\n", book->book->title);
-  remove_book (library.entry_point, "bac");
-  free_library (library.entry_point);
-
-  return 1;
+int
+main ()
+{
+  test_create_book ();
+  test_insert_and_find_book ();
+  test_remove_book ();
+  test_edge_cases ();
+  return 0;
 }
