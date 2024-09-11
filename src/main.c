@@ -1,12 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <string.h>
-#include <assert.h>
-#include "library.h"
+#include "../includes/library.h"
 
 int
-main ()
+main (void)
 {
   test_create_book ();
   test_insert_and_search_book ();

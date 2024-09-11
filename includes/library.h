@@ -49,7 +49,7 @@ create_tree_node (const char *title, const char *author, const uint16_t year);
 
 TreeNode *
 add_book (TreeNode *root, const char *title, const char *author,
-             const uint16_t year);
+          const uint16_t year);
 
 TreeNode *
 search_book (TreeNode *root, const char *title);
@@ -62,13 +62,13 @@ remove_book (TreeNode *root, const char *title);
 
 /* Tests */
 void
-test_create_book ();
+test_create_book (void);
 
 void
-test_insert_and_search_book ();
+test_insert_and_search_book (void);
 
 void
-test_remove_book ();
+test_remove_book (void);
 
 void
-test_edge_cases ();
+test_edge_cases (void);

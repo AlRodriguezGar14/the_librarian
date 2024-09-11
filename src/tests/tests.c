@@ -1,7 +1,7 @@
-#include "library.h"
+#include "../../includes/library.h"
 
 void
-test_create_book ()
+test_create_book (void)
 {
   puts ("Testing create_book...");
   Book *book = create_book ("Test Title", "Test Author", 2022);
@@ -13,7 +13,7 @@ test_create_book ()
 }
 
 void
-test_insert_and_search_book ()
+test_insert_and_search_book (void)
 {
   puts ("Testing add_book and search_book...");
   TreeNode *root = NULL;
@@ -30,7 +30,7 @@ test_insert_and_search_book ()
 }
 
 void
-test_remove_book ()
+test_remove_book (void)
 {
   puts ("Testing remove_book...");
   TreeNode *root = NULL;
@@ -47,7 +47,7 @@ test_remove_book ()
 }
 
 void
-test_edge_cases ()
+test_edge_cases (void)
 {
   puts ("Testing edge cases...");
   Book *book = create_book (NULL, NULL, 0);
