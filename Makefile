@@ -1,11 +1,11 @@
-CXX = gcc -g3  
+CXX = gcc -g3
 
-CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -I ./
+CXXFLAGS = -Wall -Wextra -Werror -Wpedantic -I ./includes/
 
-SRCS =	main.c \
-		book_utilities.c \
-		library_utilities.c \
-		tests.c
+SRCS =	src/main.c \
+	src/book_utilities.c \
+	src/library_utilities.c \
+	src/tests/tests.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -17,9 +17,9 @@ $(TARGET): $(OBJS)
 	@echo "Linking the object files to create the executable..."
 	@$(CXX) $(CXXFLAGS) -o $@ $^
 
-%.o: %.cpp
+%.o: %.c
 	@echo "Compiling the source file $< into the object file $@..."
-	@$(CXX) $(CXXFLAGS) -c $^ -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	@echo "Removing the object files..."
